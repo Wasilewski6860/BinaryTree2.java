@@ -101,9 +101,9 @@ public class SimpleBinaryTree<T> implements BinaryTree<T> {
             iw.index++;
         }
         while (iw.index < bracketStr.length() && (
-                    quote && bracketStr.charAt(iw.index) != '"' ||
-                    !quote && !Character.isWhitespace(bracketStr.charAt(iw.index)) && "(),".indexOf(bracketStr.charAt(iw.index)) < 0
-               )) {
+                quote && bracketStr.charAt(iw.index) != '"' ||
+                        !quote && !Character.isWhitespace(bracketStr.charAt(iw.index)) && "(),".indexOf(bracketStr.charAt(iw.index)) < 0
+        )) {
             iw.index++;
         }
         if (quote && bracketStr.charAt(iw.index) == '"') {
@@ -150,4 +150,11 @@ public class SimpleBinaryTree<T> implements BinaryTree<T> {
         }
         this.root = root;
     }
+
+
+
+
+
+
+
 }

@@ -48,7 +48,7 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <text value="8 (6 (4 (5), 6), 5 (, 5 (2, 8)))"/>
+                      <text value="Владислав (Леслав (Владимир (Богдан), Евгений), Николай (, Станислав (Анна, Ярослав)))"/>
                     </properties>
                   </component>
                   <component id="afbec" class="javax.swing.JButton" binding="buttonMakeTree">

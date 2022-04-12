@@ -122,4 +122,118 @@ public class BSTreeAlgorithms {
             return (res != null) ? res : node;
         }
     }
+
+
+
+
+                //Отсюда уже мое
+    public static <T extends Comparable<? super T>> boolean equals(BinaryTree.TreeNode<T> root1, BinaryTree.TreeNode<T> root2) {
+
+        if (root1 == root2) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        return root1.getValue().equals(root2.getLeft()) && equals(root1.getLeft(), root2.getLeft()) && equals(root1.getRight(), root2.getRight());
+    }
+
+    public static <T extends Comparable<? super T>> int compareStrings(String s1, String s2) {
+
+        for (int i = 0; i < s1.length() && i < s2.length(); i++) {
+            if ((int) s1.charAt(i) == (int) s2.charAt(i)) {
+                continue;
+            } else {
+                return (int) s1.charAt(i) - (int) s2.charAt(i);
+            }
+        }
+
+        if (s1.length() < s2.length()) {
+            return (s1.length() - s2.length());
+        } else if (s1.length() > s2.length()) {
+            return (s1.length() - s2.length());
+        } else {
+            return 0;
+        }
+    }
+
+
+    /*Метод поиска размера БДП*/
+    public static <T extends Comparable<? super T>> int size(BinaryTree.TreeNode<T> root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return size(root.getLeft())  + size(root.getRight())+ 1;
+    }
+
+    /*Проверка на то, является ли узел вершиной БДП*/
+    public static <T extends Comparable<? super T>> boolean isBST(BinaryTree.TreeNode<T> node) {
+
+        if (node == null) {
+            return true;
+        }
+
+        /*Проверка на то, является ли узел вершиной БДП, т.е. не противоречит ли основным принципам:
+//           * у всех узлов левого поддерева произвольного узла X значения ключей данных меньше, нежели значение ключа данных самого узла X;
+//             у всех узлов правого поддерева произвольного узла X значения ключей данных больше либо равны, нежели значение ключа данных самого узла X.
+//             *
+//         Т.е. если левое значение больше корня или правое меньше, и сравниваемый узел не null*/
+        if (node.getLeft() != null && node.getRight() !=null) {
+            int t1 = node.getValue().compareTo(node.getLeft().getValue());
+            int t2 = node.getValue().compareTo(node.getRight().getValue());
+            /*Закомментированы различные варианты сравнения*/
+            if (t1 < 0 /*compareStrings(node.value,node.left.value) <0*/ || t2 >= 0 /*compareStrings(node.value,node.right.value) > 0*/) {
+                return false;
+            }
+        }
+        return isBST(node.getLeft()) && isBST(node.getRight());
+    }
+
+    /*Метод, возвращающий поддерево большего размера*/
+    public  static <T extends Comparable<? super T>> BinaryTree.TreeNode<T> max(BinaryTree.TreeNode<T> n1, BinaryTree.TreeNode<T> n2){
+        return size(n1)>size(n2) ? n1 : n2;
+    }
+
+    /*Поиск наибольшего БДП*/
+    public static <T extends Comparable<? super T>> BinaryTree.TreeNode<T> findLargestBST(BinaryTree.TreeNode<T> root) {
+        /*Метод будет вызываться для корня всего дерева, поэтому изначально проверяем, является ли БДП корень исходного дерева*/
+        boolean check = isBST(root);
+        if (check) {
+            return root;
+        }
+        /*Выбираем наибольшую длину из деревьев справа и слева*/
+        return max(findLargestBST(root.getLeft()), findLargestBST(root.getRight()));
+    }
+
+    /*Метод для отображения дерева в виде строки*/
+    public static <T> String toBracketStr(BinaryTree.TreeNode<T> treeNode) {
+
+        // данный класс нужен только для того, чтобы "спрятать" его метод (c 2-мя параметрами)
+        class Inner {
+            void printTo(BinaryTree.TreeNode<T> node, StringBuilder sb) {
+                if (node == null) {
+                    return;
+                }
+                sb.append(node.getValue());
+                if (node.getLeft() != null || node.getRight() != null) {
+                    sb.append(" (");
+                    printTo(node.getLeft(), sb);
+                    if (node.getRight() != null) {
+                        sb.append(", ");
+                        printTo(node.getRight(), sb);
+                    }
+                    sb.append(")");
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        // класс приходится создавать, т.к. статические методы в таких класс не поддерживаются
+        new Inner().printTo(treeNode, sb);
+
+        return sb.toString();
+
+    }
+
+
 }

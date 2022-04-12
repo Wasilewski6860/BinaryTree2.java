@@ -8,6 +8,7 @@ import ru.vsu.cs.course1.tree.SimpleBinaryTree;
 import ru.vsu.cs.course1.tree.BinaryTreePainter;
 import ru.vsu.cs.course1.tree.BinaryTree;
 import ru.vsu.cs.course1.tree.bst.BSTree;
+import ru.vsu.cs.course1.tree.bst.BSTreeAlgorithms;
 import ru.vsu.cs.course1.tree.bst.SimpleBSTree;
 import ru.vsu.cs.course1.tree.bst.SimpleBSTreeMap;
 import ru.vsu.cs.course1.tree.bst.avl.AVLTree;
@@ -57,7 +58,7 @@ public class TreeDemoFrame extends JFrame {
     private JPanel paintPanel = null;
     private JFileChooser fileChooserSave;
 
-    BinaryTree<Integer> tree = new SimpleBinaryTree<>();
+    BinaryTree<String> tree = new SimpleBinaryTree<>();
 
 
     public TreeDemoFrame() {
@@ -100,17 +101,7 @@ public class TreeDemoFrame extends JFrame {
 
         buttonMakeTree.addActionListener(actionEvent -> {
             try {
-                SimpleBinaryTree<Integer> tree = new SimpleBinaryTree<>(Integer::parseInt);
-                tree.fromBracketNotation(textFieldBracketNotationTree.getText());
-                this.tree = tree;
-                repaintTree();
-            } catch (Exception ex) {
-                SwingUtils.showErrorMessageBox(ex);
-            }
-        });
-        buttonMakeBSTree.addActionListener(actionEvent -> {
-            try {
-                SimpleBSTree<Integer> tree = new SimpleBSTree<>(Integer::parseInt);
+                SimpleBinaryTree<String> tree = new SimpleBinaryTree<>(String::toString);
                 tree.fromBracketNotation(textFieldBracketNotationTree.getText());
                 this.tree = tree;
                 repaintTree();
@@ -119,10 +110,34 @@ public class TreeDemoFrame extends JFrame {
             }
         });
 
+
+
+        buttonMakeBSTree.addActionListener(actionEvent -> {
+            try {
+//                SimpleBSTree<String> tree = new SimpleBSTree<>(String::toString);
+//                tree.fromBracketNotation(textFieldBracketNotationTree.getText());
+//                BinaryTree.TreeNode node = BSTreeAlgorithms.findLargestBST(tree.getRoot());
+//                tree = (SimpleBSTree<String>) node;
+
+                SimpleBinaryTree<String> tree = new SimpleBinaryTree<>(String::toString);
+                tree.fromBracketNotation(textFieldBracketNotationTree.getText());
+                BinaryTree.TreeNode node = BSTreeAlgorithms.findLargestBST(tree.getRoot());
+                tree = (SimpleBinaryTree<String>) node;
+
+                this.tree = tree;
+                repaintTree();
+
+
+
+            } catch (Exception ex) {
+                SwingUtils.showErrorMessageBox(ex);
+            }
+        });
+
         buttonRandomGenerate.addActionListener(actionEvent -> {
-            int size = ((Integer) spinnerRandomCount.getValue()).intValue();
-            int[] arr = ArrayUtils.createRandomIntArray(size, (size <= 50) ? 100 : 1000);
-            textFieldValues.setText(ArrayUtils.toString(arr));
+            //  int size = ((String) spinnerRandomCount.getValue()).intValue();
+            //     int[] arr = ArrayUtils.createRandomIntArray(size, (size <= 50) ? 100 : 1000);
+            //   textFieldValues.setText(ArrayUtils.toString(arr));
         });
         buttonSortValues.addActionListener(actionEvent -> {
             try {
@@ -136,7 +151,7 @@ public class TreeDemoFrame extends JFrame {
 
         buttonMakeBSTree2.addActionListener(actionEvent -> {
             try {
-                makeBSTFromValues(new SimpleBSTree<>(Integer::parseInt));
+                makeBSTFromValues(new SimpleBSTree<>());
             } catch (Exception ex) {
                 SwingUtils.showErrorMessageBox(ex);
             }
@@ -162,8 +177,8 @@ public class TreeDemoFrame extends JFrame {
                 return;
             }
             try {
-                int value = Integer.parseInt(spinnerSingleValue.getValue().toString());
-                ((BSTree<Integer>) tree).put(value);
+                String value = spinnerSingleValue.getValue().toString();
+                ((BSTree<String>) tree).put(value);
                 repaintTree();
             } catch (Exception ex) {
                 SwingUtils.showErrorMessageBox(ex);
@@ -175,8 +190,8 @@ public class TreeDemoFrame extends JFrame {
                 return;
             }
             try {
-                int value = Integer.parseInt(spinnerSingleValue.getValue().toString());
-                ((BSTree<Integer>) tree).remove(value);
+                String value = spinnerSingleValue.getValue().toString();
+                ((BSTree<String>) tree).remove(value);
                 repaintTree();
             } catch (Exception ex) {
                 SwingUtils.showErrorMessageBox(ex);
@@ -225,7 +240,7 @@ public class TreeDemoFrame extends JFrame {
                 */
                 System.out.println();
                 System.out.println("Итератор:");
-                for (Integer i : BinaryTreeAlgorithms.preOrderValues(tree.getRoot())) {
+                for (String i : BinaryTreeAlgorithms.preOrderValues(tree.getRoot())) {
                     System.out.println(i);
                 }
             });
@@ -238,7 +253,7 @@ public class TreeDemoFrame extends JFrame {
                 });
                 System.out.println();
                 System.out.println("Итератор:");
-                for (Integer i : BinaryTreeAlgorithms.inOrderValues(tree.getRoot())) {
+                for (String i : BinaryTreeAlgorithms.inOrderValues(tree.getRoot())) {
                     System.out.println(i);
                 }
             });
@@ -251,7 +266,7 @@ public class TreeDemoFrame extends JFrame {
                 });
                 System.out.println();
                 System.out.println("Итератор:");
-                for (Integer i : BinaryTreeAlgorithms.postOrderValues(tree.getRoot())) {
+                for (String i : BinaryTreeAlgorithms.postOrderValues(tree.getRoot())) {
                     System.out.println(i);
                 }
             });
@@ -264,7 +279,7 @@ public class TreeDemoFrame extends JFrame {
                 });
                 System.out.println();
                 System.out.println("Итератор:");
-                for (Integer i : BinaryTreeAlgorithms.byLevelValues(tree.getRoot())) {
+                for (String i : BinaryTreeAlgorithms.byLevelValues(tree.getRoot())) {
                     System.out.println(i);
                 }
             });
@@ -331,10 +346,10 @@ public class TreeDemoFrame extends JFrame {
      *
      * @param tree Дерево
      */
-    private void makeBSTFromValues(BSTree<Integer> tree) {
-        int[] values = ArrayUtils.toIntArray(textFieldValues.getText());
+    private void makeBSTFromValues(BSTree<String> tree) {
+        String[] values = textFieldValues.getText().split(" ");
         tree.clear();
-        for (int v : values) {
+        for (String v : values) {
             tree.put(v);
         }
         this.tree = tree;
